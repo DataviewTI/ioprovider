@@ -1,0 +1,23 @@
+{
+  "name": "dataview/ioprovider",
+  "description": "serviço de cadastro simplificado de prestadores de serviço da intranetone",
+  "authors": [
+    {
+      "name": "Marcelo Disconzi",
+      "email": "mdisconzi@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Dataview\\IOProvider\\": "src/"
+    }
+  },
+  "require": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "\\Dataview\\IOProvider\\IOProviderServiceProvider"
+      ]
+    }
+  }
+}
