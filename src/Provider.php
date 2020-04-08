@@ -17,13 +17,14 @@ class Provider extends IOModel
     protected $fillable = [
         'name',
         'phone',
-        'instagram',
-        'isWhatsapp',
-        'isWhatsapp',
         'email',
         'description',
+        'instagram',
+        'isWhatsapp',
+        'delivery',
         'city_id',
-        'group_id',
+        'status',
+        // 'group_id',
       ];
 
     protected $dates = ['deleted_at'];
@@ -36,6 +37,18 @@ class Provider extends IOModel
       return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category');
     }
 
+    public function subcategories(){
+      return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category')
+        ->whereNotNull('categories.category_id')
+        ->orderBy('updated_at');
+    }
+
+
+    public function mainCategory(){
+      return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category')
+        ->whereNull('categories.category_id')
+        ->orderBy('updated_at');
+    }
 
   // public static function boot(){ 
   //   parent::boot(); 

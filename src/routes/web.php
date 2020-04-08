@@ -7,6 +7,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web','admin'], 'as' => 'adm
     Route::get('view/{id}', 'ProviderController@view');
     Route::post('create', 'ProviderController@create');
     Route::post('update/{id}', 'ProviderController@update');
+    Route::get('toggle-state/{id}', 'ProviderController@toggleState');
     Route::get('delete/{id}', 'ProviderController@delete');			
   });
 });

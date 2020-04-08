@@ -13,12 +13,12 @@
 			@component('IntranetOne::io.components.nav-tabs',
 			[
 				"_id" => "default-tablist",
-				"_active"=>1,
+				"_active"=>0,
 				"_tabs"=> [
 					[
 						"tab"=>"Listar",
 						"icon"=>"ico ico-list",
-						"view"=>"Provider::table-list"
+						"view"=>"Provider::table-list",
 					],
 					[
 						"tab"=>"Cadastrar",

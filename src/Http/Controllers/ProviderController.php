@@ -4,7 +4,7 @@ namespace Dataview\IOProvider;
 use Dataview\IntranetOne\IOController;
 use Illuminate\Http\Response;
 
-use Dataview\IntranetOne\Provider;
+use Dataview\IOProvider\Provider;
 use Dataview\IntranetOne\Category;
 use Dataview\IntranetOne\Service;
 use App\Http\Requests;
@@ -25,8 +25,9 @@ class ProviderController extends IOController{
 	}
 	
 	public function list(){
-		$query = Provider::select()
-		->get();
+
+		$query = Provider::with(['mainCategory','subcategories'])->get();
+
 		return Datatables::of($query)->make(true);
 	}
 
@@ -48,8 +49,7 @@ class ProviderController extends IOController{
         return response()->json(['errors' => $check['errors']], $check['code']);
     }
 
-    $query = Provider::select('providers.*', 'cities.city', 'cities.region')
-      ->join('cities', 'providers.city_id', '=', 'cities.id')
+    $query = Provider::with(['mainCategory','subcategories'])
       ->where('providers.id', $id)->get();
 
     return response()->json(['success' => true, 'data' => $query]);
@@ -59,12 +59,18 @@ class ProviderController extends IOController{
     $check = $this->__create($request);
     
     if (!$check['status']) {
-        return response()->json(['errors' => $check['errors']], $check['code']);
+      return response()->json(['errors' => $check['errors']], $check['code']);
     }
-    
-    $obj = new Provider($request->all());
 
+    $data = $request->all();   
+
+    $obj = new Provider($data);
+    
     $obj->save();
+
+    $cats = array_merge([$data["category"]],$data["subcategories"]);
+
+    $obj->categories()->sync($cats);
 
     return response()->json(['success' => true, 'data' => ["id"=>$obj->id]]);
 	}
@@ -79,10 +85,31 @@ class ProviderController extends IOController{
 
     $_old = Provider::find($id);
 
-    $upd = ['name','phone'];  
+    // dump($_new);
+
+    $upd = ['name','phone','description','instagram','isWhatsapp','delivery','email'];  
+
+    foreach($upd as $u)
+      $_old->{$u} = optional($_new)->{$u};
+
+    $cats = array_merge([$_new->category],$_new->subcategories);
+
+    $_old->categories()->sync($cats);
 
     $_old->save();
     return response()->json(['success' => $_old->save()]);    
+	}
+
+	public function toggleState($id){
+    $el = Provider::find($id);
+
+    if(filled($el)){
+      $val = $el->status;
+      $el->status = $el->status == "A" ? "I" : "A"; 
+      $el->save();
+      return response()->json(['success' => true]);    
+    }
+    return response()->json(['success' => false]);
 	}
 
 	public function delete($id){

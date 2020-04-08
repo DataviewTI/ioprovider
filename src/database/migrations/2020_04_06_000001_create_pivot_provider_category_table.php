@@ -11,6 +11,7 @@ class CreatePivotProviderCategoryTable extends Migration
             $table->increments('id');
             $table->integer('provider_id')->unsigned();
             $table->integer('category_id')->unsigned();
+            // $table->boolean('main')->default(false);
             $table->timestamps();
             $table->foreign('provider_id')->references('id')->on('providers')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');

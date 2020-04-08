@@ -3,7 +3,7 @@
     <div class = 'row'>
       <div class="col-12 pl-0">
         <div class="form-group">
-          <label for = 'name' class="bmd-label-floating __required">Seu nome / Nome da sua empresa ou negócio</label>
+          <label for = 'name' class="bmd-label-floating __required"><span class="ico ico-business-card"></span> Seu nome / Nome da sua empresa ou negócio</label>
           <input name = 'name' type = 'text' class = 'form-control form-control-lg' />
         </div>
       </div>
@@ -11,8 +11,8 @@
     <div class = 'row'>
       <div class="col-12 pl-0">
         <div class="form-group">
-          <label for='description'>Descreva da melhor os produtos/serviços que oferece</label>
-          <textarea id='description' name='rescription' class='form-control input-lg' style="height:80px" placeholder="Por exemplo: Vendo espetinhos de carne,frango, linguiça, simples e completo, jantinha com feijão tropeiro, torresmo etc..."></textarea>
+          <label for='description'><span class="ico ico-list"></span> Descreva da melhor os produtos/serviços que oferece</label>
+          <textarea id='description' maxlength="400" name='description' class='form-control input-lg' style="height:80px" placeholder="Por exemplo: Vendo espetinhos de carne,frango, linguiça, simples e completo, jantinha com feijão tropeiro, torresmo etc..."></textarea>
         </div>
       </div>
     </div>
@@ -20,14 +20,14 @@
     <div class = 'row'>
       <div class="col-sm-3 col-xs-12 pl-0">
         <div class="form-group">
-          <label for='phone'>Telefone de contato</label>
+          <label for='phone'><span class="ico ico-phone"></span> Telefone de contato</label>
           <input type="text" id='phone' name='phone' class = 'form-control input-lg' />
         </div>
       </div>
 
       <div class="col-sm-4 col-xs-12">
         <div class="form-group">
-          <label for = 'isWhatsapp' class="bmd-label-floating __required">esse telefone é whatsapp?</label>
+          <label for = 'isWhatsapp' class="bmd-label-floating __required"><span class="ico ico-whatsapp"></span> esse telefone é whatsapp?</label>
           <br>
           <div class="text-center mt-3 aanjulena-container">
             <span class="my-auto mt-2 aanjulena-no">Não</span>
@@ -43,9 +43,9 @@
         </div>
       </div>
 
-      <div class="col-sm-4 col-xs-12">
+      <div class="col-sm-5 col-xs-12">
         <div class="form-group">
-          <label for = 'delivery' class="bmd-label-floating __required">Faz entrega em domicílio (delivery)</label>
+          <label for = 'delivery' class="bmd-label-floating __required"><span class="ico ico-delivery"></span> Faz entrega em domicílio (delivery)</label>
           <br>
           <div class="text-center mt-3 aanjulena-container">
             <span class="my-auto mt-2 aanjulena-no">Não</span>
@@ -65,13 +65,13 @@
     <div class = 'row'>
       <div class="col-sm-7 col-xs-12 pl-0">
         <div class="form-group">
-          <label for='email'>email</label>
-          <input type="email" id='email' name='email' class = 'form-control input-lg' />
+          <label for='email'><span class="ico ico-email"></span> email</label>
+          <input type="email" id='email' name='email' class = 'form-control input-lg'/>
         </div>
       </div>
       <div class="col-sm-5 col-xs-12 pl-0">
         <div class="form-group">
-          <label for='instagram'>Você tem Instagram?</label>
+          <label for='instagram'><span class="ico ico-instagram"></span> Qual é seu Instagram?</label>
           <input type="text" id='instagram' name='instagram' placeholder="Ex: @meuinstagram" class = 'form-control input-lg' />
         </div>
       </div>
@@ -80,12 +80,12 @@
   
   <div class="col-sm-6 col-xs-5">
     <div class = 'row'>
-      <div class="col-sm-12 col-xs-12">
+      <div class="col-sm-12 col-xs-12 slim-select-container">
         <div class="form-group">
           <label for = 'name' class="bmd-label-floating __required mb-3">
             Escolha a categoria principal que mais se adequa ao seu negócio
           </label>
-          <select id="categorie">
+          <select id="category" name = "category">
           </select>          
         </div>
       </div>
@@ -97,9 +97,10 @@
           <label for = 'name' class="bmd-label-floating __required mb-3">
             Selecione até 3 subcategorias que melhor definem seu produto ou serviço
           </label>
-          <select id="subcategories" multiple>
+          <select id="subcategories" name = "subcategories" multiple>
             <option data-placeholder="true"></option>
           </select>          
+          <input type = "hidden" name = "__subcategories" id="__subcategories" />
         </div>
       </div>
     </div>

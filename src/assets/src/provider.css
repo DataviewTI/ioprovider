@@ -1,3 +1,25 @@
+.sts-inativo {
+  color: #f4cb3e;
+}
+
+.sts-ativo {
+  color: #53a600;
+}
+
+.sts-bloqueado {
+  color: #fc2803;
+}
+.ss-deselect {
+  position: absolute;
+  right: 5px;
+  top: -20px;
+}
+
+.slim-select-container .fv-plugins-icon.fv-ico {
+  right: 10px;
+  top: 0 !important;
+}
+
 .ss-main .ss-single-selected,
 .ss-main .ss-multi-selected,
 .ss-content .ss-search input {
@@ -14,7 +36,7 @@
   font-size: 1.25rem;
   line-height: 1.5;
 }
-x .ss-main .ss-multi-selected {
+.ss-main .ss-multi-selected {
   /* padding-top: 12px !important; */
   line-height: 38px !important;
   height: auto !important;

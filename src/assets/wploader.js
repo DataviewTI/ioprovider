@@ -4,7 +4,7 @@ let mix = require("laravel-mix");
 function IOProvider(params = {}) {
   let dep = {
     provider: "node_modules/intranetone-provider/src/",
-    selectPure: "node_modules/select-pure/dist/",
+    // selectPure: "node_modules/select-pure/dist/",
     slimSelect: "node_modules/slim-select/dist/",
   };
 
