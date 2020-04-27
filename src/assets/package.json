@@ -1,34 +1,32 @@
 {
-    "description": "Provider service's assets package for IntranetOne",
-    "license": "MIT",
-    "main": "wploader.js",
-    "name": "intranetone-provider",
-    "version": "1.0.1",
-    "maintainers": [
-        {
-            "name": "Marcelo Disconzi",
-            "email": "mdisconzi@gmail.com"
-        },
-        {
-            "name": "Thiago Brauer",
-            "email": "thiagobrauer@gmail.com"
-        },
-        {
-            "name": "Luis Disconzi",
-            "email": "luis@dataview.com.br"
-        }
-    ],
-    "keywords": [
-        "Laravel",
-        "IntranetOne",
-        "Intranet CMS",
-        "Dataview",
-        "Prestador de Serviços"
-    ],
-    "IODependencies": {
-        "slim-select": "^1.25.0"
+  "description": "Provider service's assets package for IntranetOne",
+  "license": "MIT",
+  "main": "wploader.js",
+  "name": "intranetone-provider",
+  "version": "1.0.1",
+  "maintainers": [
+    {
+      "name": "Marcelo Disconzi",
+      "email": "mdisconzi@gmail.com"
     },
-    "ignore": [
-        "node_modules"
-    ]
+    {
+      "name": "Thiago Brauer",
+      "email": "thiagobrauer@gmail.com"
+    },
+    {
+      "name": "Luis Disconzi",
+      "email": "luis@dataview.com.br"
+    }
+  ],
+  "keywords": [
+    "Laravel",
+    "IntranetOne",
+    "Intranet CMS",
+    "Dataview",
+    "Prestador de Serviços"
+  ],
+  "IODependencies": {},
+  "ignore": [
+    "node_modules"
+  ]
 }

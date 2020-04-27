@@ -9,9 +9,11 @@ class CreateProviderTable extends Migration
     {
       Schema::create('providers', function (Blueprint $table) {
         $table->increments('id');
+        $table->char('cpf_cnpj', 14)->unique();
         $table->string('name');
         $table->boolean('isWhatsapp')->default(false);
         $table->boolean('delivery')->default(false);
+        $table->boolean('featured')->default(false);
         $table->char('phone', 15);
         $table->string('email')->nullable()->unique();
         $table->string('instagram')->nullable()->unique();

@@ -1,4 +1,10 @@
 <?php
+
+Route::group(['prefix' => 'provider'], function () {
+  Route::get('list', 'ProviderController@list');
+  Route::post('create', 'ProviderController@create');
+});	
+
 Route::group(['prefix' => 'admin', 'middleware' => ['web','admin'], 'as' => 'admin.'],function(){
     Route::group(['prefix' => 'provider'], function () {
     Route::get('/','ProviderController@index');

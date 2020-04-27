@@ -11,6 +11,34 @@ new IOService(
       ft_subcategories,
     };
 
+    $("#cpf_cnpj")
+      .removeAttr("readonly")
+      .mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
+        onKeyPress: function(val, e, field, options) {
+          var args = Array.from(arguments);
+          args.push((iscpf) => {
+            if (self.fv !== null) {
+              if (iscpf) {
+                self.fv[0]
+                  .disableValidator("cpf_cnpj", "vat")
+                  .enableValidator("cpf_cnpj", "id")
+                  .revalidateField("cpf_cnpj");
+              } else {
+                self.fv[0]
+                  .disableValidator("cpf_cnpj", "id")
+                  .enableValidator("cpf_cnpj", "vat")
+                  .revalidateField("cpf_cnpj");
+              }
+            }
+          });
+          field.mask(
+            $.jMaskGlobals.CPFCNPJMaskBehavior.apply({}, args),
+            options
+          );
+        },
+        onComplete: function(val, e, field) {},
+      });
+
     self.fields.subcategories = new SlimSelect({
       select: "#subcategories",
       searchText: "Nenhuma subcategoria encontrada!",
@@ -45,22 +73,21 @@ new IOService(
       searchPlaceholder: "Procurar",
       onChange: function(info) {
         if (info.value !== undefined)
-          getCategories(self, info.value)
+          getCategories({
+            self,
+            service: "provider",
+            type: "json",
+            category: info.value,
+          })
             .then((arr) => {
-              const cats = arr.map(({ id, category }) => {
+              const cats = arr.map(({ id, cat }) => {
                 return {
-                  text: category,
+                  text: cat,
                   value: `${id}`,
                 };
               });
               self.fields.subcategories.setData(cats);
-
-              if (this.subcats !== undefined) {
-                self.fields.subcategories.set(this.subcats);
-              }
-              //zera o campo
-              else self.fields.subcategories.set(""); //zera o campo
-              this.subcats = undefined;
+              self.fields.subcategories.set(""); //zera o campo
             })
             .catch((err) => {
               self.fields.subcategories.setData([]);
@@ -79,11 +106,16 @@ new IOService(
       searchPlaceholder: "Procurar",
       onChange: function(info) {
         if (info.value !== undefined)
-          getCategories(self, info.value)
+          getCategories({
+            self,
+            service: "provider",
+            type: "json",
+            category: info.value,
+          })
             .then((arr) => {
-              const cats = arr.map(({ id, category }) => {
+              const cats = arr.map(({ id, cat }) => {
                 return {
-                  text: category,
+                  text: cat,
                   value: `${id}`,
                 };
               });
@@ -97,15 +129,36 @@ new IOService(
       },
     });
 
-    getCategories(self)
+    getCategories({
+      self,
+      service: "provider",
+      type: "json",
+      category: 1,
+    })
       .then((arr) => {
-        const cats = arr.map(({ id, category }) => {
+        const cats = arr.map(({ id, cat }) => {
           return {
-            text: category,
+            text: cat,
             value: `${id}`,
-            selected: false,
           };
         });
+      })
+      .catch((err) => {});
+
+    getCategories({
+      self,
+      service: "provider",
+      type: "json",
+      onlyCategories: true,
+    })
+      .then((arr) => {
+        const cats = arr.map(({ id, cat }) => {
+          return {
+            text: cat,
+            value: `${id}`,
+          };
+        });
+
         self.fields.category.setData(cats);
         self.fields.category.set(""); //zera o campo
         self.fields.ft_category.setData(cats);
@@ -195,6 +248,22 @@ new IOService(
               callback: function() {
                 return self.fields.category.selected() !== undefined;
               },
+            },
+          },
+        },
+        cpf_cnpj: {
+          validators: {
+            notEmpty: {
+              message: "O cpf/cnpj é obrigatório",
+            },
+            vat: {
+              enabled: false,
+              country: "BR",
+              message: "cnpj inválido",
+            },
+            id: {
+              country: "BR",
+              message: "cpf inválido",
             },
           },
         },
@@ -303,12 +372,12 @@ new IOService(
             targets: "__dt_categoria-principal-filter",
             visible: false,
             render: function(data, type, row) {
-              return data.length ? data[0].category : "";
+              return data.length ? data[0].id : "";
             },
           },
           {
             targets: "__dt_subcategories",
-            visible: false,
+            visible: true,
             render: function(data, type, row) {
               return JSON.stringify(data.map((el) => el.id));
             },
@@ -490,27 +559,28 @@ new IOService(
   }
 );
 
-function getCategories(self) {
-  return new Promise(function(resolve, reject) {
-    try {
-      $.ajax({
-        headers: {
-          "Content-Type": "application/json",
-        },
-        complete: (jqXHR) => {
-          $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
-        },
-        url: `${self.path}/categories`,
-        success: (data) => {
-          if (data.success === true) resolve(data.data);
-          else reject([]);
-        },
-      });
-    } catch (err) {
-      reject([]);
-    }
-  });
-}
+// function getCategories(self) {
+//   return new Promise(function(resolve, reject) {
+//     try {
+//       $.ajax({
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         complete: (jqXHR) => {
+//           $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
+//         },
+//         url: `${self.path}/categories`,
+//         success: (data) => {
+//           console.log("chamou");
+//           if (data.success === true) resolve(data.data);
+//           else reject([]);
+//         },
+//       });
+//     } catch (err) {
+//       reject([]);
+//     }
+//   });
+// }
 
 function toggleStatus(self, id) {
   return new Promise(function(resolve, reject) {
@@ -534,30 +604,70 @@ function toggleStatus(self, id) {
   });
 }
 
-function getCategories(self, id) {
-  return new Promise(function(resolve, reject) {
+// function getCategories(self, id) {
+//   return new Promise(function(resolve, reject) {
+//     try {
+//       $.ajax({
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         complete: (jqXHR) => {
+//           $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
+//         },
+//         url:
+//           id === undefined
+//             ? `${self.path}/categories`
+//             : `${self.path}/categories/${id}`,
+//         success: (data) => {
+//           if (data.success === true) resolve(data.data);
+//           else reject([]);
+//         },
+//       });
+//     } catch (err) {
+//       reject([]);
+//     }
+//   });
+// }
+
+getCategories = function(params = {}) {
+  const p = Object.assign(
+    {
+      type: "json",
+    },
+    params
+  );
+
+  let clean_params = { ...p };
+  delete clean_params.self;
+
+  return new Promise((resolve, reject) => {
     try {
-      $.ajax({
-        headers: {
-          "Content-Type": "application/json",
-        },
-        complete: (jqXHR) => {
+      $.post(`category/list`, clean_params)
+        .done((data) => {
+          if (Array.isArray(data)) resolve(data);
+          else
+            reject({
+              msg: "Category -> getCategories: invalid return data",
+              data: [],
+            });
+        })
+        .fail((err) => {
+          reject({
+            msg: "Category -> getCategories: error on ajax request",
+            data: [],
+          });
+        })
+        .always(() => {
           $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
-        },
-        url:
-          id === undefined
-            ? `${self.path}/categories`
-            : `${self.path}/categories/${id}`,
-        success: (data) => {
-          if (data.success === true) resolve(data.data);
-          else reject([]);
-        },
-      });
+        });
     } catch (err) {
-      reject([]);
+      reject({
+        msg: "Category -> getCategories: error on Promise",
+        data: [],
+      });
     }
   });
-}
+};
 
 //CRUD CallBacks
 function view(self) {
@@ -568,12 +678,28 @@ function view(self) {
       $("#phone")
         .val(data.phone)
         .trigger("input");
-      console.log("AA", data.isWhatsapp === 1);
       $("#isWhatsapp").aaToggle(data.isWhatsapp === 1);
       $("#delivery").aaToggle(data.delivery === 1);
 
       $("[name='email']").val(data.email);
       $("[name='instagram']").val(data.instagram);
+
+      // console.log(data.cpf_cnpj);
+      $("#cpf_cnpj")
+        .val(data.cpf_cnpj)
+        .trigger("input");
+
+      if (data.cpf_cnpj.length == 11) {
+        self.fv[0]
+          .disableValidator("cpf_cnpj", "vat")
+          .enableValidator("cpf_cnpj", "id")
+          .revalidateField("cpf_cnpj");
+      } else {
+        self.fv[0]
+          .disableValidator("cpf_cnpj", "id")
+          .enableValidator("cpf_cnpj", "vat")
+          .revalidateField("cpf_cnpj");
+      }
 
       // console.log();
       self.fields.category.subcats = data.subcategories.map((el) => {

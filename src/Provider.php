@@ -16,6 +16,7 @@ class Provider extends IOModel
 
     protected $fillable = [
         'name',
+        'cpf_cnpj',
         'phone',
         'email',
         'description',

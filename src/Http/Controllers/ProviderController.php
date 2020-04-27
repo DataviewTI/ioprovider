@@ -26,7 +26,7 @@ class ProviderController extends IOController{
 	
 	public function list(){
 
-		$query = Provider::with(['mainCategory','subcategories'])->get();
+		$query = Provider::with(['mainCategory','subcategories'])->limit(10)->get();
 
 		return Datatables::of($query)->make(true);
 	}
@@ -42,7 +42,6 @@ class ProviderController extends IOController{
     return response()->json(['success' => true, "data" => $query]);
   }
 
-
 	public function view($id){
     $check = $this->__view();
     if (!$check['status']) {
@@ -56,22 +55,21 @@ class ProviderController extends IOController{
 	}
 
 	public function create(ProviderRequest $request){
-    $check = $this->__create($request);
+    $data = $request->all();
+    $data_obj = (object) $data;   
+
+    if(blank(optional($data_obj)->fromsite)){
+      $check = $this->__create($request);
     
-    if (!$check['status']) {
-      return response()->json(['errors' => $check['errors']], $check['code']);
+      if (!$check['status']) {
+        return response()->json(['errors' => $check['errors']], $check['code']);
+      }
     }
 
-    $data = $request->all();   
-
     $obj = new Provider($data);
-    
     $obj->save();
-
     $cats = array_merge([$data["category"]],$data["subcategories"]);
-
     $obj->categories()->sync($cats);
-
     return response()->json(['success' => true, 'data' => ["id"=>$obj->id]]);
 	}
 	

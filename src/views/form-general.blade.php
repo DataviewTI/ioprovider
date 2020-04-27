@@ -1,7 +1,13 @@
 <div class = 'row pt-2'>
   <div class="col-sm-6 col-xs-12" style = 'border-right:1px #e1f0ee solid'>
     <div class = 'row'>
-      <div class="col-12 pl-0">
+      <div class="col-sm-3 col-xs-12 pl-0">
+        <div class="form-group">
+          <label for='cpf_cnpj'>CPF / CNPJ</label>
+          <input type="text" id='cpf_cnpj' name='cpf_cnpj' maxlength="18" class = 'form-control input-lg' />
+        </div>
+      </div>
+      <div class="col-sm-9 col-xs-12">
         <div class="form-group">
           <label for = 'name' class="bmd-label-floating __required"><span class="ico ico-business-card"></span> Seu nome / Nome da sua empresa ou negócio</label>
           <input name = 'name' type = 'text' class = 'form-control form-control-lg' />
