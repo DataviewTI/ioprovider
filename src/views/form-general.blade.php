@@ -4,7 +4,7 @@
       <div class="col-sm-3 col-xs-12 pl-0">
         <div class="form-group">
           <label for='cpf_cnpj'>CPF / CNPJ</label>
-          <input type="text" id='cpf_cnpj' name='cpf_cnpj' maxlength="18" class = 'form-control input-lg' />
+          <input type="text" id='cpf_cnpj' name='cpf_cnpj' class = 'form-control input-lg' />
         </div>
       </div>
       <div class="col-sm-9 col-xs-12">

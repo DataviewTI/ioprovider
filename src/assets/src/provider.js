@@ -11,33 +11,56 @@ new IOService(
       ft_subcategories,
     };
 
-    $("#cpf_cnpj")
-      .removeAttr("readonly")
-      .mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
-        onKeyPress: function(val, e, field, options) {
-          var args = Array.from(arguments);
-          args.push((iscpf) => {
-            if (self.fv !== null) {
-              if (iscpf) {
-                self.fv[0]
-                  .disableValidator("cpf_cnpj", "vat")
-                  .enableValidator("cpf_cnpj", "id")
-                  .revalidateField("cpf_cnpj");
-              } else {
-                self.fv[0]
-                  .disableValidator("cpf_cnpj", "id")
-                  .enableValidator("cpf_cnpj", "vat")
-                  .revalidateField("cpf_cnpj");
-              }
+    // $("#cpf_cnpj")
+    //   .removeAttr("readonly")
+    //   .mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
+    //     onKeyPress: function(val, e, field, options) {
+    //       var args = Array.from(arguments);
+    //       args.push((iscpf) => {
+    //         if (self.fv !== null) {
+    //           if (iscpf) {
+    //             self.fv[0]
+    //               .disableValidator("cpf_cnpj", "vat")
+    //               .enableValidator("cpf_cnpj", "id")
+    //               .revalidateField("cpf_cnpj");
+    //           } else {
+    //             self.fv[0]
+    //               .disableValidator("cpf_cnpj", "id")
+    //               .enableValidator("cpf_cnpj", "vat")
+    //               .revalidateField("cpf_cnpj");
+    //           }
+    //         }
+    //       });
+    //       field.mask(
+    //         $.jMaskGlobals.CPFCNPJMaskBehavior.apply({}, args),
+    //         options
+    //       );
+    //     },
+    //     onComplete: function(val, e, field) {},
+    //   });
+
+    $("#cpf_cnpj").mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
+      onKeyPress: function(val, e, field, options) {
+        var args = Array.from(arguments);
+        args.push((iscpf) => {
+          if (self.fv !== null) {
+            if (iscpf) {
+              self.fv[0]
+                .disableValidator("cpf_cnpj", "vat")
+                .enableValidator("cpf_cnpj", "id")
+                .revalidateField("cpf_cnpj");
+            } else {
+              self.fv[0]
+                .disableValidator("cpf_cnpj", "id")
+                .enableValidator("cpf_cnpj", "vat")
+                .revalidateField("cpf_cnpj");
             }
-          });
-          field.mask(
-            $.jMaskGlobals.CPFCNPJMaskBehavior.apply({}, args),
-            options
-          );
-        },
-        onComplete: function(val, e, field) {},
-      });
+          }
+        });
+        field.mask($.jMaskGlobals.CPFCNPJMaskBehavior.apply({}, args), options);
+      },
+      onComplete: function(val, e, field) {},
+    });
 
     self.fields.subcategories = new SlimSelect({
       select: "#subcategories",
@@ -262,11 +285,13 @@ new IOService(
               message: "cnpj inválido",
             },
             id: {
+              enabled: false,
               country: "BR",
               message: "cpf inválido",
             },
           },
         },
+
         phone: {
           validators: {
             phone: {
@@ -377,7 +402,7 @@ new IOService(
           },
           {
             targets: "__dt_subcategories",
-            visible: true,
+            visible: false,
             render: function(data, type, row) {
               return JSON.stringify(data.map((el) => el.id));
             },
@@ -510,7 +535,6 @@ new IOService(
       })
       .on("click", ".ico-dot", function() {
         var data = self.dt.row($(this).parents("tr")).data();
-        console.log(data.status, data);
         if (data.status !== "B") {
           toggleStatus(self, data.id)
             .then((ret) => {
@@ -553,9 +577,15 @@ new IOService(
     self.callbacks.unload = function(self) {
       $("#isWhatsapp").aaDefaultState();
       $("#delivery").aaDefaultState();
+      $("#cpf_cnpj").removeAttr("readonly");
       self.fields.category.set("");
       self.fields.subcategories.set("");
     };
+
+    // self.onNew = (self) => {
+    //   self.unload(self);
+    //   document.location.reload();
+    // };
   }
 );
 
@@ -604,31 +634,6 @@ function toggleStatus(self, id) {
   });
 }
 
-// function getCategories(self, id) {
-//   return new Promise(function(resolve, reject) {
-//     try {
-//       $.ajax({
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         complete: (jqXHR) => {
-//           $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
-//         },
-//         url:
-//           id === undefined
-//             ? `${self.path}/categories`
-//             : `${self.path}/categories/${id}`,
-//         success: (data) => {
-//           if (data.success === true) resolve(data.data);
-//           else reject([]);
-//         },
-//       });
-//     } catch (err) {
-//       reject([]);
-//     }
-//   });
-// }
-
 getCategories = function(params = {}) {
   const p = Object.assign(
     {
@@ -674,7 +679,7 @@ function view(self) {
   return {
     onSuccess: function(data) {
       $("[name='name']").val(data.name);
-      $("[name='description']").val(data.name);
+      $("[name='description']").val(data.description);
       $("#phone")
         .val(data.phone)
         .trigger("input");
@@ -684,37 +689,28 @@ function view(self) {
       $("[name='email']").val(data.email);
       $("[name='instagram']").val(data.instagram);
 
-      // console.log(data.cpf_cnpj);
-      $("#cpf_cnpj")
-        .val(data.cpf_cnpj)
-        .trigger("input");
-
-      if (data.cpf_cnpj.length == 11) {
-        self.fv[0]
-          .disableValidator("cpf_cnpj", "vat")
-          .enableValidator("cpf_cnpj", "id")
-          .revalidateField("cpf_cnpj");
-      } else {
-        self.fv[0]
-          .disableValidator("cpf_cnpj", "id")
-          .enableValidator("cpf_cnpj", "vat")
-          .revalidateField("cpf_cnpj");
-      }
-
       // console.log();
-      self.fields.category.subcats = data.subcategories.map((el) => {
-        return el.id;
-      });
-
       self.fields.category.set(
         data.main_category.map((el) => {
           return el.id;
         })
       );
-      // .then((xx) => {})
-      // .catch((err) => {
-      //   console.log("asas");
-      // });
+
+      setTimeout(() => {
+        self.fields.subcategories.set(
+          data.subcategories.map((el) => {
+            return el.id;
+          })
+        );
+      }, 1000);
+
+      $("#cpf_cnpj")
+        .val(
+          data.cpf_cnpj.length == 11 ? "000.000.000-00" : "00.000.000/0000-00"
+        )
+        .trigger("input")
+        .attr("readonly", true)
+        .val($("#cpf_cnpj").masked(data.cpf_cnpj));
     },
     onError: function(self) {
       console.log("executa algo no erro do callback");
