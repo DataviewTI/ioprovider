@@ -29,20 +29,21 @@ class ProviderController extends IOController{
 		$query = Provider::select('id','name','isWhatsapp','delivery','featured','phone','email','instagram','description','status')
       ->with([
           'mainCategory' => function($query){
-          $query->select('categories.id as mc_id','categories.category as mc_category','categories.category_id as mc_category_id','categories.config as mc_config');
+          $query->select('categories.id','categories.category','categories.category_id','categories.config');
         },
           'subcategories' => function($query){
-          $query->select('categories.id as sc_id','categories.category as mc_category','categories.category_id as sc_category_id','categories.config as sc_config');
+          $query->select('categories.id','categories.category','categories.category_id','categories.config');
         },
       ]);
 
-      if($public == true)
-      $query = $query->where('status','A');
+    if($public == true)
+    $query = $query->where('status','A');
 
-      $query->inRandomOrder()
+    $query->inRandomOrder()
       ->limit(100)
       ->get();
 
+  
 		return Datatables::of($query)->make(true);
 	}
 

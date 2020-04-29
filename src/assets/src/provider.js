@@ -362,21 +362,21 @@ new IOService(
             width: "25%",
 
             render: function(data, type, row) {
-              return data.length ? data[0].mc_category : "";
+              return data.length ? data[0].category : "";
             },
           },
           {
             targets: "__dt_categoria-principal-filter",
             visible: false,
             render: function(data, type, row) {
-              return data.length ? data[0].mc_id : "";
+              return data.length ? data[0].id : "";
             },
           },
           {
             targets: "__dt_subcategories",
             visible: false,
             render: function(data, type, row) {
-              return JSON.stringify(data.map((el) => el.sc_id));
+              return JSON.stringify(data.map((el) => el.id));
             },
           },
           {
