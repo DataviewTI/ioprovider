@@ -26,8 +26,7 @@ class ProviderController extends IOController{
 	
 	public function list(){
 
-		$query = Provider::with(['mainCategory','subcategories'])->limit(10)->get();
-
+		$query = Provider::with(['mainCategory','subcategories'])->inRandomOrder()->get();
 		return Datatables::of($query)->make(true);
 	}
 
