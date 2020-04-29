@@ -18,7 +18,7 @@
       <div class="col-12 pl-0">
         <div class="form-group">
           <label for='description'><span class="ico ico-list"></span> Descreva da melhor os produtos/serviços que oferece</label>
-          <textarea id='description' maxlength="400" name='description' class='form-control input-lg' style="height:80px" placeholder="Por exemplo: Vendo espetinhos de carne,frango, linguiça, simples e completo, jantinha com feijão tropeiro, torresmo etc..."></textarea>
+          <textarea id='description' maxlength="200" name='description' class='form-control input-lg' style="height:80px" placeholder="Por exemplo: Vendo espetinhos de carne,frango, linguiça, simples e completo, jantinha com feijão tropeiro, torresmo etc..."></textarea>
         </div>
       </div>
     </div>

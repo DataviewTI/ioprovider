@@ -11,34 +11,6 @@ new IOService(
       ft_subcategories,
     };
 
-    // $("#cpf_cnpj")
-    //   .removeAttr("readonly")
-    //   .mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
-    //     onKeyPress: function(val, e, field, options) {
-    //       var args = Array.from(arguments);
-    //       args.push((iscpf) => {
-    //         if (self.fv !== null) {
-    //           if (iscpf) {
-    //             self.fv[0]
-    //               .disableValidator("cpf_cnpj", "vat")
-    //               .enableValidator("cpf_cnpj", "id")
-    //               .revalidateField("cpf_cnpj");
-    //           } else {
-    //             self.fv[0]
-    //               .disableValidator("cpf_cnpj", "id")
-    //               .enableValidator("cpf_cnpj", "vat")
-    //               .revalidateField("cpf_cnpj");
-    //           }
-    //         }
-    //       });
-    //       field.mask(
-    //         $.jMaskGlobals.CPFCNPJMaskBehavior.apply({}, args),
-    //         options
-    //       );
-    //     },
-    //     onComplete: function(val, e, field) {},
-    //   });
-
     $("#cpf_cnpj").mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
       onKeyPress: function(val, e, field, options) {
         var args = Array.from(arguments);
@@ -387,24 +359,24 @@ new IOService(
             targets: "__dt_categoria-principal",
             searchable: true,
             orderable: true,
-            width: "15%",
+            width: "25%",
 
             render: function(data, type, row) {
-              return data.length ? data[0].category : "";
+              return data.length ? data[0].mc_category : "";
             },
           },
           {
             targets: "__dt_categoria-principal-filter",
             visible: false,
             render: function(data, type, row) {
-              return data.length ? data[0].id : "";
+              return data.length ? data[0].mc_id : "";
             },
           },
           {
             targets: "__dt_subcategories",
             visible: false,
             render: function(data, type, row) {
-              return JSON.stringify(data.map((el) => el.id));
+              return JSON.stringify(data.map((el) => el.sc_id));
             },
           },
           {

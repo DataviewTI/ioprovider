@@ -42,7 +42,7 @@ class ProviderRequest extends IORequest
     return [
       'cpf_cnpj' => "required|unique:providers,cpf_cnpj,{$isUpdate},id",
       'email' => "bail|nullable|email|unique:providers,email,{$isUpdate},id",
-      'description'=>"bail|max:400"
+      'description'=>"bail|max:200"
     ]; 
   }
 

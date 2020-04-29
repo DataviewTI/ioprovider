@@ -41,14 +41,14 @@ class Provider extends IOModel
     public function subcategories(){
       return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category')
         ->whereNotNull('categories.category_id')
-        ->orderBy('updated_at');
+        ->orderBy('categories.updated_at');
     }
 
 
     public function mainCategory(){
       return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category')
         ->whereNull('categories.category_id')
-        ->orderBy('updated_at');
+        ->orderBy('categories.updated_at');
     }
 
   // public static function boot(){ 

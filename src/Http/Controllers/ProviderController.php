@@ -24,11 +24,34 @@ class ProviderController extends IOController{
 		return view('Provider::index');
 	}
 	
-	public function list(){
+	public function list($public=null){
 
-		$query = Provider::with(['mainCategory','subcategories'])->inRandomOrder()->get();
+		$query = Provider::select('id','name','isWhatsapp','delivery','featured','phone','email','instagram','description','status')
+      ->with([
+          'mainCategory' => function($query){
+          $query->select('categories.id as mc_id','categories.category as mc_category','categories.category_id as mc_category_id','categories.config as mc_config');
+        },
+          'subcategories' => function($query){
+          $query->select('categories.id as sc_id','categories.category as mc_category','categories.category_id as sc_category_id','categories.config as sc_config');
+        },
+      ]);
+
+      if($public == true)
+      $query = $query->where('status','A');
+
+      $query->inRandomOrder()
+      ->limit(100)
+      ->get();
+
 		return Datatables::of($query)->make(true);
 	}
+
+	// public function list(){
+
+	// 	$query = Provider::select('id','name','isWhatsapp','delivery','featured','phone','email','instagram','description')->
+  //   with(['mainCategory','subcategories'])->get();
+	// 	return Datatables::of($query)->make(true);
+	// }
 
   function categories($id=null) {
     if(blank($id)){
