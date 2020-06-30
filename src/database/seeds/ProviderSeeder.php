@@ -322,7 +322,7 @@ class ProviderSeeder extends Seeder
           ->whereNull('category_id')
           ->pluck('id');
 
-      for($i=0;$i<2000;$i++){
+      for($i=0;$i<5;$i++){
 
         if($faker->boolean(75)){
           $name = $faker->unique()->name;
@@ -334,7 +334,7 @@ class ProviderSeeder extends Seeder
           $cpf_cnpj = $faker->unique()->cnpj(false);
         }
 
-        $prov = Provider::create([
+        $prov = new Provider([
           "name"=> $name,
           "cpf_cnpj" => $cpf_cnpj,
           "isWhatsapp" => $faker->boolean(75),
@@ -346,9 +346,42 @@ class ProviderSeeder extends Seeder
           "status"=>"A"
         ]);
 
+        $img_sizes = [
+          "original"=>false,
+          "sizes"=>[
+              "thumb"=>["w"=>180,"h"=>180],
+              "md"=>["w"=>720,"h"=>720],
+            ]
+        ];
+
+        $prov->setAppend("sizes",json_encode($img_sizes));
+        $prov->setAppend("hasImages",true);
+        $prov->setAppend("service_id",$service->id);
+
+        $prov->save();
 
         //add some
         if(filled($prov)){
+          //add images
+          $tmp_name = tempnam(sys_get_temp_dir(),'dz');
+          $stream = file_get_contents("https://picsum.photos/640/480");
+          $file = file_put_contents($tmp_name,$stream);
+
+          $imgs = json_encode([(object)[
+              "name"=>$faker->bothify('imgseed_#?#?#?#?.jpg'),
+              "tmp"=>$tmp_name,
+              "data"=>[
+                "caption"=>null,
+                "details"=>null,
+              ],
+              "mimetype"=>"image/jpeg",
+              "id"=>null,
+              "order"=>1
+            ]]);
+
+          $prov->group->manageImages(json_decode($imgs),$img_sizes);
+          $prov->save();            
+
 
           $main = $faker->randomElement($cats);
           $prov->categories()->attach($main);

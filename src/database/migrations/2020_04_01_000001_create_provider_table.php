@@ -20,9 +20,10 @@ class CreateProviderTable extends Migration
         $table->char('city_id',7)->nullable();
         $table->text('description')->nullable();
         $table->decimal('value')->default(0);
+        $table->integer('group_id')->unsigned()->nullable();
         $table->enum('status',['A','I','B'])->default('I');
         $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade')->onUpdate('cascade');
-        // $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade')->onUpdate('cascade');
+        $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade')->onUpdate('cascade');
         $table->timestamps();
         $table->softDeletes();
       });

@@ -4,6 +4,7 @@ namespace Dataview\IOProvider;
 use Dataview\IntranetOne\IOModel;
 use Dataview\IntranetOne\Group;
 use Dataview\IntranetOne\Category;
+use Dataview\IntranetOne\Service;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Provider extends IOModel
@@ -25,7 +26,7 @@ class Provider extends IOModel
         'delivery',
         'city_id',
         'status',
-        // 'group_id',
+        'group_id',
       ];
 
     protected $dates = ['deleted_at'];
@@ -44,6 +45,9 @@ class Provider extends IOModel
         ->orderBy('categories.updated_at');
     }
 
+    public function group(){
+      return $this->belongsTo('Dataview\IntranetOne\Group');
+    }
 
     public function mainCategory(){
       return $this->belongsToMany('Dataview\IntranetOne\Category','provider_category')
@@ -51,7 +55,19 @@ class Provider extends IOModel
         ->orderBy('categories.updated_at');
     }
 
-  // public static function boot(){ 
-  //   parent::boot(); 
-  // }
+  public static function boot(){ 
+    parent::boot(); 
+
+    static::created(function (Provider $obj) {
+      if($obj->getAppend("hasImages")){
+        $group = new Group([
+          'group' => "Provider`s album ".$obj->id,
+          'sizes' => $obj->getAppend("sizes"),
+          'service_id' => Service::where('alias','provider')->value('id')
+        ]);
+        $group->save();
+        $obj->group()->associate($group)->save();
+      }
+    });
+  }
 }

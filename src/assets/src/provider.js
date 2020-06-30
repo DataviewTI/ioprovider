@@ -11,6 +11,75 @@ new IOService(
       ft_subcategories,
     };
 
+    //Dropzone initialization
+    self.dz = new DropZoneLoader({
+      el: "#custom-dropzone",
+      // class: ["dz-small-buttons"],
+      thumbnailWidth: 180,
+      thumbnailHeight: 180,
+      copy_params: {
+        original: true,
+        sizes: {
+          thumb: { w: 180, h: 180 },
+          slide: { w: 720, h: 180 },
+        },
+      },
+      // crop: {
+      //   aspect_ratio_x: 1,
+      //   aspect_ratio_y: 1,
+      // },
+      buttons: {
+        edit: true,
+        extra: {
+          ico: "ico-save",
+          tooltip: "no puede ser",
+          bg: "#333",
+          fg: "#ff0",
+          action: (file) => {
+            // console.log("errou cu");
+          },
+        },
+      },
+      // removedFile: function(file) {},
+      // onSuccess: function(file, ret) {},
+    });
+
+    // self.dz = new DropZoneLoader({
+    //   el: "#custom-dropzone",
+    //   autoProcessQueue: false,
+    //   thumbnailWidth: 300,
+    //   thumbnailHeight: 300,
+    //   class: "m-auto",
+    //   maxFiles: 1,
+    //   class: [],
+    //   mainImage: false,
+    //   copy_params: {
+    //     original: true,
+    //     sizes: {},
+    //   },
+    //   // crop: {
+    //   //   ready: (cr) => {
+    //   //     cr.aspect_ratio_x = 1;
+    //   //     cr.aspect_ratio_y = 1;
+    //   //   },
+    //   // },
+    //   buttons: {
+    //     reorder: false,
+    //   },
+    //   onSuccess: function(file, ret) {
+    //     //self.fv[0].revalidateField('hasImages');
+    //   },
+    //   onPreviewLoad: function(_t) {
+    //     if (self.toView !== null) {
+    //       let _conf = self.config.default;
+    //       self.dz.removeAllFiles(true);
+    //       // self.dz.reloadImages(self.config.default);
+    //       self.fv[0].validate();
+    //       //aa
+    //     }
+    //   },
+    // });
+
     $("#cpf_cnpj").mask($.jMaskGlobals.CPFCNPJMaskBehavior, {
       onKeyPress: function(val, e, field, options) {
         var args = Array.from(arguments);
@@ -59,6 +128,7 @@ new IOService(
       deselectLabel:
         '<span class="ico ico-close" style="font-size:10px; color:red"></span>',
       closeOnSelect: false,
+      onChange: (info) => {},
     });
 
     self.fields.category = new SlimSelect({
@@ -100,7 +170,7 @@ new IOService(
         '<span class="ico ico-close" style="font-size:10px; color:red"></span>',
       searchPlaceholder: "Procurar",
       onChange: function(info) {
-        if (info.value !== undefined)
+        if (info.value !== undefined) {
           getCategories({
             self,
             service: "provider",
@@ -119,8 +189,12 @@ new IOService(
             })
             .catch((err) => {
               self.fields.ft_subcategories.setData([]);
+              self.fields.ft_subcategories.set(""); //zera o campo
             });
-        else self.fields.ft_subcategories.setData([]);
+        } else {
+          self.fields.ft_subcategories.setData([]);
+          self.fields.ft_subcategories.set(""); //zera o campo
+        }
       },
     });
 
@@ -212,6 +286,7 @@ new IOService(
     $("#delivery").aaDefaultState();
 
     let form = document.getElementById(self.dfId);
+
     let fv1 = FormValidation.formValidation(form, {
       fields: {
         name: {
@@ -294,10 +369,14 @@ new IOService(
         }),
       },
     }).setLocale("pt_BR", FormValidation.locales.pt_BR);
-    self.fv = [fv1];
+    self.fv = [fv1, fv1];
 
     self.wizardActions(function() {
-      //asasas
+      console.log(self.dz.getOrderedDataImages());
+      $("[name='__dz_images']").val(
+        JSON.stringify(self.dz.getOrderedDataImages())
+      );
+      $("[name='__dz_copy_params']").val(JSON.stringify(self.dz.copy_params));
     });
 
     self.dt = $("#default-table")
@@ -531,7 +610,7 @@ new IOService(
         }
       })
       .on("draw.dt", function() {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({ container: "body" });
       });
 
     self.callbacks.view = view(self);
@@ -553,36 +632,8 @@ new IOService(
       self.fields.category.set("");
       self.fields.subcategories.set("");
     };
-
-    // self.onNew = (self) => {
-    //   self.unload(self);
-    //   document.location.reload();
-    // };
   }
 );
-
-// function getCategories(self) {
-//   return new Promise(function(resolve, reject) {
-//     try {
-//       $.ajax({
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         complete: (jqXHR) => {
-//           $.ajaxSettings.headers["X-CSRF-Token"] = laravel_token;
-//         },
-//         url: `${self.path}/categories`,
-//         success: (data) => {
-//           console.log("chamou");
-//           if (data.success === true) resolve(data.data);
-//           else reject([]);
-//         },
-//       });
-//     } catch (err) {
-//       reject([]);
-//     }
-//   });
-// }
 
 function toggleStatus(self, id) {
   return new Promise(function(resolve, reject) {

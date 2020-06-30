@@ -18,6 +18,9 @@ class ProviderRequest extends IORequest
 
     $input['featured'] = $this->has('__featured') ? $input['__delivery']  : false;
 
+    $input['sizes'] = $input['__dz_copy_params'];
+
+
     $input['subcategories'] = blank($input['__subcategories']) ? [] : explode(",",$input['__subcategories']);
 
     $this->replace($input);

@@ -25,7 +25,12 @@
     "Dataview",
     "Prestador de Serviços"
   ],
-  "IODependencies": {},
+  "IODependencies": {
+    "sortablejs": "^1.6.0",
+    "dropzone": "^5.1.1",
+    "cropperjs": "^1.5.6",
+    "jquery-cropper": "^1.0.1"
+  },
   "ignore": [
     "node_modules"
   ]

@@ -13,7 +13,7 @@ $factory->define(Provider::class, function (Faker $faker) {
       "phone"=> $faker->cellphoneNumber,
       "email"=> $faker->email,
       "instagram" => $faker->boolean(33) ? $faker->lexify('????????') : null,
-      "description" => text(mt_rand(20,400)),
+      "description" => text(mt_rand(30,200)),
       "status"=>"A"
     ];
 });

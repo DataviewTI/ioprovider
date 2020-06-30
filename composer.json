@@ -12,7 +12,9 @@
       "Dataview\\IOProvider\\": "src/"
     }
   },
-  "require": {},
+  "require": {
+    "intervention/image": "^2.5.1"
+  },
   "extra": {
     "laravel": {
       "providers": [

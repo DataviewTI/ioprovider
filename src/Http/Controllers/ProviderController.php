@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 
 use Dataview\IOProvider\Provider;
 use Dataview\IntranetOne\Category;
+use Dataview\IOGallery\Gallery;
 use Dataview\IntranetOne\Service;
 use App\Http\Requests;
 use Dataview\IOProvider\ProviderRequest;
@@ -88,6 +89,14 @@ class ProviderController extends IOController{
         return response()->json(['errors' => $check['errors']], $check['code']);
       }
     }
+
+    $obj = new Gallery($request->all());
+    $obj->setAppend("sizes",$request->__dz_copy_params);
+    $obj->save();
+
+    $obj->categories()->sync($request->__cat_subcats_converted);
+    $obj->group->manageImages(json_decode($request->__dz_images),json_decode($request->__dz_copy_params));
+    $obj->save();
 
     $obj = new Provider($data);
     $obj->save();
